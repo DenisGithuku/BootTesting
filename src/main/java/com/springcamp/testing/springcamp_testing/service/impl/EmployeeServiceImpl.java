@@ -4,7 +4,6 @@ import com.springcamp.testing.springcamp_testing.exception.ResourceNotFoundExcep
 import com.springcamp.testing.springcamp_testing.model.Employee;
 import com.springcamp.testing.springcamp_testing.repository.EmployeeRepository;
 import com.springcamp.testing.springcamp_testing.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,8 +11,13 @@ import java.util.Optional;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
+
+    private final EmployeeRepository employeeRepository;
+
+    // useful for initializing this service in unit tests
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @Override
     public Employee saveEmployee(Employee employee) {

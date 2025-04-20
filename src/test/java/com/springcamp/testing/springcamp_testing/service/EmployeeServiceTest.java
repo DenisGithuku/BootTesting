@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -75,12 +75,7 @@ public class EmployeeServiceTest {
     @Test
     public void givenEmployeeList_whenFindAllEmployees_thenReturnEmployeeList() {
         // given - precondition for setup
-        Employee employee1 = Employee.builder()
-                .id(2L)
-                .firstName("Tony")
-                .lastName("Odhiambo")
-                .email("tony@gmail.com")
-                .build();
+        Employee employee1 = Employee.builder().id(2L).firstName("Tony").lastName("Odhiambo").email("tony@gmail.com").build();
 
         // when - action or behaviour to test
         // create find all stub
@@ -138,5 +133,18 @@ public class EmployeeServiceTest {
         // then - verify output
         assertThat(updatedEmployee.getEmail()).isEqualTo("denisgithuku@gmail.com");
         assertThat(updatedEmployee.getLastName()).isEqualTo("Mwangi");
+    }
+
+    // Junit test for delete employee by id
+    @DisplayName("Junit test for delete employee by id")
+    @Test
+    public void givenEmployeeId_whenDeleteEmployeeById_thenReturnNothing() {
+        // given - precondition for setup
+        willDoNothing().given(employeeRepository).deleteById(employee.getId());
+        // when - action or behaviour to test
+        employeeService.deleteById(employee.getId());
+
+        // then - verify output
+        verify(employeeRepository, times(1)).deleteById(employee.getId());
     }
 }

@@ -86,7 +86,7 @@ public class EmployeeServiceTest {
         // create find all stub
         given(employeeRepository.findAll()).willReturn(List.of(employee, employee1));
 
-        List<Employee> employeeList = employeeRepository.findAll();
+        List<Employee> employeeList = employeeService.findAll();
 
         // then - verify output
         assertThat(employeeList).isNotNull();
@@ -101,7 +101,7 @@ public class EmployeeServiceTest {
         // create find all stub
         given(employeeRepository.findAll()).willReturn(Collections.emptyList());
 
-        List<Employee> employeeList = employeeRepository.findAll();
+        List<Employee> employeeList = employeeService.findAll();
 
         // then - verify output
         assertThat(employeeList).isEmpty();
@@ -121,5 +121,22 @@ public class EmployeeServiceTest {
         // then - verify output
         assertThat(savedEmployee).isNotNull();
         assertThat(savedEmployee.getId()).isSameAs(employee.getId());
+    }
+
+    // Junit test for update employee
+    @DisplayName("Junit test for update employee")
+    @Test
+    public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
+        // given - precondition for setup
+        given(employeeRepository.save(employee)).willReturn(employee);
+        employee.setLastName("Mwangi");
+        employee.setEmail("denisgithuku@gmail.com");
+
+        // when - action or behaviour to test
+        Employee updatedEmployee = employeeService.update(employee);
+
+        // then - verify output
+        assertThat(updatedEmployee.getEmail()).isEqualTo("denisgithuku@gmail.com");
+        assertThat(updatedEmployee.getLastName()).isEqualTo("Mwangi");
     }
 }

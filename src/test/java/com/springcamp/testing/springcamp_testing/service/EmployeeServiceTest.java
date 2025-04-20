@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,5 +68,43 @@ public class EmployeeServiceTest {
 
         // then - verify output
         verify(employeeRepository, never()).save(any(Employee.class));
+    }
+
+    // Junit test for find all employees
+    @DisplayName("Junit test for find all employees")
+    @Test
+    public void givenEmployeeList_whenFindAllEmployees_thenReturnEmployeeList() {
+        // given - precondition for setup
+        Employee employee1 = Employee.builder()
+                .id(2L)
+                .firstName("Tony")
+                .lastName("Odhiambo")
+                .email("tony@gmail.com")
+                .build();
+
+        // when - action or behaviour to test
+        // create find all stub
+        given(employeeRepository.findAll()).willReturn(List.of(employee, employee1));
+
+        List<Employee> employeeList = employeeRepository.findAll();
+
+        // then - verify output
+        assertThat(employeeList).isNotNull();
+        assertThat(employeeList.size()).isEqualTo(2);
+    }
+
+    // Junit test for find all employees
+    @DisplayName("Junit test for empty find all employees returns empty list")
+    @Test
+    public void givenEmployeeList_whenEmptyFindAllEmployees_thenReturnEmptyEmployeeList() {
+        // when - action or behaviour to test
+        // create find all stub
+        given(employeeRepository.findAll()).willReturn(Collections.emptyList());
+
+        List<Employee> employeeList = employeeRepository.findAll();
+
+        // then - verify output
+        assertThat(employeeList).isEmpty();
+        assertThat(employeeList.size()).isEqualTo(0);
     }
 }

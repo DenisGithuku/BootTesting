@@ -6,6 +6,7 @@ import com.springcamp.testing.springcamp_testing.repository.EmployeeRepository;
 import com.springcamp.testing.springcamp_testing.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ResourceNotFoundException("Employee with email: " + employee.getEmail() + " found");
         }
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return employeeRepository.findAll();
     }
 }

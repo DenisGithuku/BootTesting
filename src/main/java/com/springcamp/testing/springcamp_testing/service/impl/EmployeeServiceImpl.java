@@ -34,4 +34,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> findAll() {
         return employeeRepository.findAll();
     }
+
+    @Override
+    public Optional<Employee> findById(long id) {
+        return employeeRepository.findById(id);
+    }
 }

@@ -84,14 +84,28 @@ class EmployeeControllerTest {
     @DisplayName("Junit test for get employee by id positive scenario")
     @Test
     public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
-        // given - precondition for setup
+        // given--precondition for setup
         given(employeeService.findById(employee.getId())).willReturn(Optional.of(employee));
 
-        // when - action or behaviour to test
+        // when--action or behaviour to test
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
 
-        // then - verify output
+        // then--verify output
         response.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.firstName", is(employee.getFirstName()))).andExpect(jsonPath("$.lastName", is(employee.getLastName()))).andExpect(jsonPath("$.email", is(employee.getEmail())));
+    }
+
+    // Junit test for get employee by id negative scenario
+    @DisplayName("Junit test for get employee by id negative scenario")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeNotFound() throws Exception {
+        // given--precondition for setup
+        given(employeeService.findById(employee.getId())).willReturn(Optional.empty());
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
+
+        // then--verify output
+        response.andDo(print()).andExpect(status().isNotFound());
     }
 
 }

@@ -17,7 +17,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest
@@ -52,6 +56,28 @@ class EmployeeControllerTest {
 
         // then—verify output
         response.andDo(MockMvcResultHandlers.print()).andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(employee.getFirstName()))).andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName()))).andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
+    }
+
+    // Junit test to get all the employees
+    @DisplayName("Junit test for get all employees")
+    @Test
+    public void givenEmployeeList_whenGetAllEmployees_thenReturnEmployeeList() throws Exception {
+        // given--precondition for setup
+        List<Employee> employeeList = new ArrayList<>();
+        Employee employee1 = Employee.builder().firstName("Peter").lastName("Odhiambo").email("peterodhiambo@gmail.com").build();
+        employeeList.add(employee);
+        employeeList.add(employee1);
+
+        given(employeeService.findAll()).willReturn(employeeList);
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        // then--verify output
+        response.andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(employeeList.size())));
+
     }
 
 }

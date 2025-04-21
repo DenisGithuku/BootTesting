@@ -3,6 +3,7 @@ package com.springcamp.testing.springcamp_testing.controller;
 import com.springcamp.testing.springcamp_testing.model.Employee;
 import com.springcamp.testing.springcamp_testing.service.EmployeeService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.List;
 @RequestMapping("/api/employees")
 public class EmployeeController {
 
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
-    public EmployeeController(EmployeeService employeeService) { this.employeeService = employeeService; }
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -24,5 +27,10 @@ public class EmployeeController {
     @GetMapping
     public List<Employee> getAllEmployees() {
         return employeeService.findAll();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") long employeeId) {
+        return employeeService.findById(employeeId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

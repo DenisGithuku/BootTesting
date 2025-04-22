@@ -111,17 +111,34 @@ class EmployeeControllerTest {
     @DisplayName("Junit test for update employee positive scenario")
     @Test
     public void givenUpdateEmployee_whenUpdateEmployee_thenReturnUpdatedEmployeeObject() throws Exception {
-        // given - precondition for setup
+        // given--precondition for setup
         Employee updatedEmployee = Employee.builder().firstName("Peter").lastName("Odhiambo").email("peterodhiambo@gmail.com").build();
 
         given(employeeService.findById(employee.getId())).willReturn(Optional.of(employee));
         given(employeeService.update(any(Employee.class))).willAnswer(invocation -> invocation.getArgument(0));
 
-        // when - action or behaviour to test
+        // when--action or behaviour to test
         ResultActions response = mockMvc.perform(put("/api/employees/{id}", employee.getId()).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updatedEmployee)));
 
-        // then - verify output
+        // then--verify output
         response.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.firstName", is(updatedEmployee.getFirstName()))).andExpect(jsonPath("$.lastName", is(updatedEmployee.getLastName()))).andExpect(jsonPath("$.email", is(updatedEmployee.getEmail())));
+    }
+
+    // Junit test for update employee negative scenario
+    @DisplayName("Junit test for update employee negative scenario")
+    @Test
+    public void givenUpdateEmployee_whenUpdateNonExistentEmployee_thenReturn404() throws Exception {
+        // given--precondition for setup
+        Employee updatedEmployee = Employee.builder().firstName("Peter").lastName("Odhiambo").email("peterodhiambo@gmail.com").build();
+
+        given(employeeService.findById(employee.getId())).willReturn(Optional.empty());
+        given(employeeService.update(any(Employee.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employee.getId()).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(updatedEmployee)));
+
+        // then--verify output
+        response.andDo(print()).andExpect(status().isNotFound());
     }
 
 }

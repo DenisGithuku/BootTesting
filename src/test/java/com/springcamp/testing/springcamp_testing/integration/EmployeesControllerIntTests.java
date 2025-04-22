@@ -13,7 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -50,5 +55,25 @@ public class EmployeesControllerIntTests {
 
         // then—verify output
         response.andDo(print()).andExpect(status().isCreated()).andExpect(jsonPath("$.firstName", is(employee.getFirstName()))).andExpect(jsonPath("$.lastName", is(employee.getLastName()))).andExpect(jsonPath("$.email", is(employee.getEmail())));
+    }
+
+    // Integration test to get all the employees
+    @DisplayName("Integration test for get all employees")
+    @Test
+    public void givenEmployeeList_whenGetAllEmployees_thenReturnEmployeeList() throws Exception {
+        // given--precondition for setup
+        List<Employee> employeeList = new ArrayList<>();
+        Employee employee1 = Employee.builder().firstName("Peter").lastName("Odhiambo").email("peterodhiambo@gmail.com").build();
+        employeeList.add(employee);
+        employeeList.add(employee1);
+
+        employeeRepository.saveAll(employeeList);
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(get("/api/employees"));
+
+        // then--verify output
+        response.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.size()", is(employeeList.size())));
+
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
@@ -75,5 +76,33 @@ public class EmployeesControllerIntTests {
         // then--verify output
         response.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.size()", is(employeeList.size())));
 
+    }
+
+    // Integration test for get employee by id positive scenario
+    @DisplayName("Integration test for get employee by id positive scenario")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
+        // given--precondition for setup
+        employeeRepository.save(employee);
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employee.getId()));
+
+        // then--verify output
+        response.andDo(print()).andExpect(status().isOk()).andExpect(jsonPath("$.firstName", is(employee.getFirstName()))).andExpect(jsonPath("$.lastName", is(employee.getLastName()))).andExpect(jsonPath("$.email", is(employee.getEmail())));
+    }
+
+    // Integration test for get employee by id negative scenario
+    @DisplayName("Integration test for get employee by id negative scenario")
+    @Test
+    public void givenInvalidEmployeeId_whenGetEmployeeById_thenReturnEmpty() throws Exception {
+        // given--precondition for setup
+        employeeRepository.save(employee);
+
+        // when--action or behaviour to test
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", 100L));
+
+        // then--verify output
+        response.andDo(print()).andExpect(status().isNotFound());
     }
 }

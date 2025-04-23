@@ -1,5 +1,6 @@
 package com.springcamp.testing.springcamp_testing.repository;
 
+import com.springcamp.testing.springcamp_testing.integration.AbstractionBaseTest;
 import com.springcamp.testing.springcamp_testing.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class EmployeeRepositoryIntTest {
+public class EmployeeRepositoryIntTest extends AbstractionBaseTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -24,11 +25,7 @@ public class EmployeeRepositoryIntTest {
 
     @BeforeEach
     public void setup() {
-        employee = Employee.builder()
-                .firstName("Denis")
-                .lastName("Githuku")
-                .email("denisgithuku@gmail.com")
-                .build();
+        employee = Employee.builder().firstName("Denis").lastName("Githuku").email("denisgithuku@gmail.com").build();
         employeeRepository.deleteAll();
     }
 
@@ -53,11 +50,7 @@ public class EmployeeRepositoryIntTest {
     public void givenEmployeeList_whenFindAll_returnAllEmployees() {
         // given - precondition for setup
 
-        Employee employee2 = Employee.builder()
-                .firstName("Alvin")
-                .lastName("Omondi")
-                .email("alvinomondi@gmail.com")
-                .build();
+        Employee employee2 = Employee.builder().firstName("Alvin").lastName("Omondi").email("alvinomondi@gmail.com").build();
 
         employeeRepository.saveAll(List.of(employee, employee2));
 

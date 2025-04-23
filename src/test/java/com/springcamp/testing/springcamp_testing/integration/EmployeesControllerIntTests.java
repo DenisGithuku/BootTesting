@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -130,5 +131,20 @@ public class EmployeesControllerIntTests {
 
         // then--verify output
         response.andDo(print()).andExpect(status().isNotFound());
+    }
+
+    // Integration test for delete employee
+    @DisplayName("Integration test for delete employee")
+    @Test
+    public void givenEmployeeId_whenDeleteEmployee_thenReturn200() throws Exception {
+        // given - precondition for setup
+        employeeRepository.save(employee);
+
+        // when - action or behaviour to test
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", employee.getId()));
+
+        // then - verify output
+        response.andDo(print()).andExpect(status().isOk());
+
     }
 }
